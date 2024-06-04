@@ -63,6 +63,7 @@ const mockEvent: APIGatewayProxyEventV2 = {
 };
 
 describe("Dummy test", () => {
+	// TODO: Add 500 and 405 http tests
 	it("Testing handler", async () => {
 		expect.hasAssertions();
 		const response = await handler(mockEvent, mockContext);
