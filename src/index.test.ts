@@ -1,6 +1,7 @@
 import { APIGatewayProxyEventV2, Context } from "aws-lambda";
 
 import { handler } from "./index";
+import { isMergedUser } from "./fetch";
 
 const mockContext: Context = {
 	callbackWaitsForEmptyEventLoop: false,
@@ -57,17 +58,15 @@ const mockEvent: APIGatewayProxyEventV2 = {
 		time: "21/Oct/2020:15:47:57 +0000",
 		timeEpoch: 1603295277092,
 	},
-	body: '{"foo":"bar"}',
+	body: '{"usersUrl":"https://jsonplaceholder.typicode.com/users/1", "postsUrl": "https://jsonplaceholder.typicode.com/posts/1"}',
 	isBase64Encoded: false,
 };
 
 describe("Dummy test", () => {
 	it("Testing handler", async () => {
 		expect.hasAssertions();
-
-		await expect(handler(mockEvent, mockContext)).resolves.toEqual({
-			body: <string>mockEvent.body,
-			statusCode: 200,
-		});
+		const response = await handler(mockEvent, mockContext);
+		expect(response.statusCode).toEqual(200);
+		expect(isMergedUser(JSON.parse(response.body).message)).toBe(true);
 	});
 });
